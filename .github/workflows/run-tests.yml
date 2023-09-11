@@ -1,6 +1,6 @@
 name: Automated tests
 
-on:
+on:     # прикрутить позже workflow_dispatch
   push:
     branches:
       - allure
