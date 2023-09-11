@@ -1,9 +1,16 @@
 name: Automated tests
 
 on:     # прикрутить позже workflow_dispatch
-  push:
-    branches:
-      - allure
+#  push:
+#    branches:
+#      - allure
+   workflow_dispatch:
+#     inputs:
+#       deployment_target:
+#         description: Choose target
+#         required: true
+#         default: type
+
 
 permissions:
   contents: read
