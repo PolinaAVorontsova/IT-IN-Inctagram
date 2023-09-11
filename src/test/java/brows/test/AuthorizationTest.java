@@ -2,6 +2,7 @@ package brows.test;
 
 import brows.page.LoginPage;
 import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.*;
 import com.codeborne.selenide.Configuration;
 import brows.data.User;
@@ -19,7 +20,7 @@ public class AuthorizationTest {
     public void setUp() {
         sleep(1000);
         Configuration.holdBrowserOpen = true;
-//        SelenideLogger.addListener("allure", new AllureSelenide());
+        SelenideLogger.addListener("allure", new AllureSelenide());
     }
 
     @Test       /* Успешная авторизация */
