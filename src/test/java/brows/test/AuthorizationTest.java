@@ -2,6 +2,7 @@ package brows.test;
 
 import brows.page.LoginPage;
 import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.*;
 import com.codeborne.selenide.Configuration;
 import brows.data.User;
@@ -19,14 +20,19 @@ public class AuthorizationTest {
     public void setUp() {
         sleep(1000);
         Configuration.holdBrowserOpen = true;
-//        SelenideLogger.addListener("allure", new AllureSelenide());
+        SelenideLogger.addListener("allure", new AllureSelenide());
     }
 
     @Test       /* Успешная авторизация */
-    void UpdateHappyPath() {
+    void successfulAuthorization() {
         var loginPage = open("https://inctagram.vercel.app/ru/sign-in", LoginPage.class);
         var myProfilePage = loginPage.validLogin(validUser1.getEmail(), validUser1.getPassword());
         closeWindow();
+    }
+
+    @Test
+    void UpdateHappyPath() {
+        //Это заглушка теста
     }
 
 
