@@ -30,6 +30,11 @@ public class AuthorizationTest {
         closeWindow();
     }
 
+    @Test
+    void UpdateHappyPath() {
+        //Это заглушка теста
+    }
+
 
     @Test
     void wrongLogin() {
