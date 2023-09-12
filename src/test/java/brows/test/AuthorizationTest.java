@@ -14,7 +14,7 @@ public class AuthorizationTest {
     User validUser1 = new User("dajoje", "rtnzsfzzc@laste.ml", "Qwe!123");
     public String wrongLogin = "dajoje8283@wlmycnn.com";
     public String wrongPass = "Qwe1231!";
-
+    public String URL_signInRu = "https://inctagram.vercel.app/ru/sign-in";
 
     @BeforeEach
     public void setUp() {
@@ -22,12 +22,15 @@ public class AuthorizationTest {
         Configuration.holdBrowserOpen = true;
         SelenideLogger.addListener("allure", new AllureSelenide());
     }
+    @AfterEach
+    public void close() {
+        closeWindow();
+    }
 
     @Test       /* Успешная авторизация */
     void successfulAuthorization() {
-        var loginPage = open("https://inctagram.vercel.app/ru/sign-in", LoginPage.class);
+        var loginPage = open(URL_signInRu, LoginPage.class);
         var myProfilePage = loginPage.validLogin(validUser1.getEmail(), validUser1.getPassword());
-        closeWindow();
     }
 
     @Test
@@ -38,21 +41,19 @@ public class AuthorizationTest {
 
     @Test
     void wrongLogin() {
-        var loginPage = open("https://inctagram.vercel.app/ru/sign-in", LoginPage.class);
+        var loginPage = open(URL_signInRu, LoginPage.class);
 
         loginPage.invavalidLoginOrPassword(wrongLogin, validUser1.getPassword());
         loginPage.getAlertError("Auth error");
-        closeWindow();
     }
 
     @Test
     void wrongPass() {
-        var loginPage = open("https://inctagram.vercel.app/ru/sign-in", LoginPage.class);
+        var loginPage = open(URL_signInRu, LoginPage.class);
 
         loginPage.invavalidLoginOrPassword(validUser1.getEmail(), wrongPass);
         loginPage.getErrorMassageFieldEmail("Неверный пароль или почта");
         loginPage.getErrorMassageFieldPassword("Неверный пароль или почта");
-        closeWindow();
     }
 
 }
