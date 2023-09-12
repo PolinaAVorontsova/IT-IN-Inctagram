@@ -1,18 +1,18 @@
 name: Automated tests
 
 on:
-  push:
-    branches:
-      - allure
-#  workflow_dispatch:
-#    inputs:
-#      deployment_target:
-#        description: Choose target
-#        required: true
-#        default: second_test
-#        type: choice
-#        options:
-#          - Run_test
+  workflow_dispatch:
+    inputs:
+      deployment_target:
+        description: Choose target
+        required: true
+        default: second_test
+        type: choice
+        options:
+          - Run_test
+#  push:
+#    branches:
+#      - allure
 
 
 permissions:
@@ -91,7 +91,7 @@ jobs:
           run: chmod +x gradlew
 
         - name: Run_test
-#          if: "github.event.inputs.deployment_target == 'Run_test'"
+          if: "github.event.inputs.deployment_target == 'Run_test'"
           run: |
             ./gradlew clean test --info -D selenide.headless=true
           continue-on-error: true
