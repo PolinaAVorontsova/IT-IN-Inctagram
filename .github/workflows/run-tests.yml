@@ -92,7 +92,8 @@ jobs:
 
         - name: Run_test
 #          if: "github.event.inputs.deployment_target == 'Run_test'"
-          run: ./gradlew test --info -D selenide.headless=true
+          run: |
+            ./gradlew test --info -D selenide.headless=true
 #         continue-on-error: true
 
         # - name: Run AllureReport
@@ -103,7 +104,7 @@ jobs:
           with:
             name: allure-results
             path:
-              allure-results
+              build/allure-results
             retention-days: 1
 
     generate-report:
