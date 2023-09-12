@@ -93,7 +93,7 @@ jobs:
         - name: Run_test
 #          if: "github.event.inputs.deployment_target == 'Run_test'"
           run: |
-            ./gradlew test --info -D selenide.headless=true
+            ./gradlew clean test --info -D selenide.headless=true
           continue-on-error: true
 
         - name: Store allure results
