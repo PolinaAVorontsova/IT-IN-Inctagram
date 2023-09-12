@@ -26,7 +26,7 @@ public class AuthorizationTest {
     @Test       /* Успешная авторизация */
     void successfulAuthorization() {
         var loginPage = open("https://inctagram.vercel.app/ru/sign-in", LoginPage.class);
-        var myProfilePage = loginPage.validLogin(wrongLogin, validUser1.getPassword());
+        var myProfilePage = loginPage.validLogin(validUser1.getEmail(), validUser1.getPassword());
         closeWindow();
     }
 
