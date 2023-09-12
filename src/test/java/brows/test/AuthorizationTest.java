@@ -24,11 +24,11 @@ public class AuthorizationTest {
     }
 
     @Test       /* Успешная авторизация */
-    void UpdateHappyPath() {
+    void successfulAuthorization() {
         var loginPage = open("https://inctagram.vercel.app/ru/sign-in", LoginPage.class);
         var myProfilePage = loginPage.validLogin(wrongLogin, validUser1.getPassword());
         closeWindow();
-    } //сломал тест для проверки
+    }
 
 
     @Test
