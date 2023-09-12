@@ -1,15 +1,15 @@
 name: Automated tests
 
-on:     # прикрутить позже workflow_dispatch
-#  push:
-#    branches:
-#      - allure
-   workflow_dispatch:
-#     inputs:
-#       deployment_target:
-#         description: Choose target
-#         required: true
-#         default: type
+on:     
+  workflow_dispatch:
+    inputs:
+      deployment_target:
+        description: Choose target
+        required: true
+        default: second_test
+        type: choice
+        options:
+          - Run_test
 
 
 permissions:
@@ -87,12 +87,13 @@ jobs:
         - name: Grant execute permission for gradlew
           run: chmod +x gradlew
 
-        - name: Run test
+        - name: Run_test
+          if: "github.event.inputs.deployment_target == 'Run_test'" 
           run: ./gradlew test --info -D selenide.headless=true
 #         continue-on-error: true
 
-        - name: Run AllureReport
-          run: ./gradlew allureReport
+        # - name: Run AllureReport
+        #   run: ./gradlew allureReport
 
         - name: Store allure results
           uses: actions/upload-artifact@v3
