@@ -202,10 +202,44 @@ public class RegressTest {
         registrationPage.getErrorMassageFieldUserName("Имя пользователя не должно превышать 30 символов");
         registrationPage.buttonRegistrationDisabled();
     }
+    @Test
+    @Owner("Fedor Sharov")
+    @Feature("Регистрация")
+    @Story("IN-20")
+    @Description("Информирование пользователя - в имя пользователя менее 6 символов ")
+    void ErrorUserNameLess6Characters() {
+        faker = new Faker(new Locale("en"));
+        User newUser = new User(faker.lorem().characters(5, true, true), faker.internet().emailAddress(), validUser1.getPassword());
+
+        var registrationPage = open(URL_signUpEn, RegistrationPage.class);
+        $("[id=sign-up-userName]").setValue(newUser.getName());
+        $("[id=sign-up-email]").click();
+
+        registrationPage.getErrorMassageFieldUserName("Имя пользователя должно быть не менее 6 символов");
+        registrationPage.buttonRegistrationDisabled();
+    }
 
     @Test
     @Owner("Fedor Sharov")
-    @Feature("Авторизация")
+    @Feature("Регистрация")
+    @Story("IN-20")
+    @Description("Информирование пользователя - пароль пользователя менее 6 символов ")
+    void ErrorPasswordLess6Characters() {
+        faker = new Faker(new Locale("en"));
+        User newUser = new User(faker.lorem().characters(30, true, true), faker.internet().emailAddress(), faker.lorem().characters(5, true, true));
+
+        var registrationPage = open(URL_signUpEn, RegistrationPage.class);
+        $("[id=sign-up-userName]").setValue(newUser.getName());
+        $("[id=sign-up-email]").setValue(newUser.getEmail());
+        $("[id=sign-up-password]").setValue(newUser.getPassword());
+        $("[id=sign-up-passwordConfirm]").click();
+
+        registrationPage.getErrorMassageFieldEmailOrPassword("Пароль должен быть не менее 6 символов");
+        registrationPage.buttonRegistrationDisabled();
+    }
+    @Test
+    @Owner("Fedor Sharov")
+    @Feature("Регистрация")
     @Story("IN-20")
     @Description("Информирование пользователя - пароль пользователя больше 20 символов ")
     void ErrorPasswordLonger20Characters() {
@@ -221,4 +255,172 @@ public class RegressTest {
         registrationPage.getErrorMassageFieldEmailOrPassword("Пароль не должен превышать 20 символов");
         registrationPage.buttonRegistrationDisabled();
     }
+    @Test
+    @Owner("Fedor Sharov")
+    @Feature("Регистрация")
+    @Story("IN-22")
+    @Description("Информирование пользователя - имя пользователя не удовлетворяет условиям: Имя пользователя должно содержать a-z, A-Z, 0-9, _, -")
+    void ErrorIfUserNameNotValid() {
+        faker = new Faker(new Locale("en"));
+
+
+        var registrationPage = open(URL_signUpEn, RegistrationPage.class);
+
+        //русские символы
+        $("[id=sign-up-userName]").setValue("новыйпользователь");
+        $("[id=sign-up-email]").click();
+        registrationPage.getErrorMassageFieldUserName("Имя пользователя должно содержать a-z, A-Z, 1-9");
+        registrationPage.buttonRegistrationDisabled();
+        refresh();
+
+        // заглавные русские
+        $("[id=sign-up-userName]").setValue("ТЕСТТЕСТ");
+        $("[id=sign-up-email]").click();
+        registrationPage.getErrorMassageFieldUserName("Имя пользователя должно содержать a-z, A-Z, 1-9");
+        registrationPage.buttonRegistrationDisabled();
+        refresh();
+
+        //пробел
+        $("[id=sign-up-userName]").setValue("test test");
+        $("[id=sign-up-email]").click();
+        registrationPage.getErrorMassageFieldUserName("Пароль не должен содержать пробелов");
+        registrationPage.buttonRegistrationDisabled();
+        refresh();
+
+        //спецсиволы
+        $("[id=sign-up-userName]").setValue("test!test");
+        $("[id=sign-up-email]").click();
+        registrationPage.getErrorMassageFieldUserName("Имя пользователя должно содержать a-z, A-Z, 1-9");
+        registrationPage.buttonRegistrationDisabled();
+        refresh();
+
+        //с точкой
+        $("[id=sign-up-userName]").setValue("test.test");
+        $("[id=sign-up-email]").click();
+        registrationPage.getErrorMassageFieldUserName("Имя пользователя должно содержать a-z, A-Z, 1-9");
+        registrationPage.buttonRegistrationDisabled();
+        refresh();
+
+        //Арабские символы
+        $("[id=sign-up-userName]").setValue("أنأنس");
+        $("[id=sign-up-email]").click();
+        registrationPage.getErrorMassageFieldUserName("Имя пользователя должно содержать a-z, A-Z, 1-9");
+        registrationPage.buttonRegistrationDisabled();
+        refresh();
+
+        // Ниже проверим валидность всех доступных символов
+        User validUser2 = new User("0_1-23456789" + faker.name().firstName(), faker.internet().emailAddress(), "Qwe!123");
+        registrationPage.processRegistration(validUser2.getName(), validUser2.getEmail(), validUser2.getPassword(), validUser2.getPassword());
+        $("[id=sign-up-agreemets]").click();
+        $("[id=sign-up-submit]").click();
+        $(".modal__header")
+                .shouldHave(Condition.text("Email sent"))
+                .shouldBe(visible);
+
+        $(".modal__body")
+                .shouldBe(visible)
+                .shouldHave(Condition.text("Мы отправили ссылку для подтверждения на почту: " + validUser2.getEmail()));
+    }
+
+    @Test
+    @Owner("Fedor Sharov")
+    @Feature("Регистрация")
+    @Story("IN-21")
+    @Description("Информирование пользователя - пароль не удовлетворяет требованиям. Сейчас есть ошибка - не валидные знаки: ` и '.  По ТЗ пароль может содержать -   0-9, a-z, A-Z, ! \" # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \\ ] ^ _` { | } ~}")
+    void ErrorIfPasswordNotValid() {
+        faker = new Faker(new Locale("en"));
+        /* 0-9, a-z, A-Z, ! " # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _` { | } ~} */
+        var registrationPage = open(URL_signUpEn, RegistrationPage.class);
+
+        //не сдержит верхнего регистра
+        $("[id=sign-up-password]").setValue("qwer1!");
+        $("[id=sign-up-passwordConfirm]").click();
+
+        registrationPage.getErrorMassageFieldEmailOrPassword("Пароль должен содержать a-z, A-Z, 1-9, спецсимвол");
+        registrationPage.buttonRegistrationDisabled();
+        refresh();
+
+        //не сдержит нижнего регистра
+        $("[id=sign-up-password]").setValue("QWERTY1!");
+        $("[id=sign-up-passwordConfirm]").click();
+
+        registrationPage.getErrorMassageFieldEmailOrPassword("Пароль должен содержать a-z, A-Z, 1-9, спецсимвол");
+        registrationPage.buttonRegistrationDisabled();
+        refresh();
+
+        //не сдержит цифр
+        $("[id=sign-up-password]").setValue("Qwerty!");
+        $("[id=sign-up-passwordConfirm]").click();
+
+        registrationPage.getErrorMassageFieldEmailOrPassword("Пароль должен содержать a-z, A-Z, 1-9, спецсимвол");
+        registrationPage.buttonRegistrationDisabled();
+        refresh();
+
+        //не сдержит спецсиволы
+        $("[id=sign-up-password]").setValue("Qwerty1");
+        $("[id=sign-up-passwordConfirm]").click();
+
+        registrationPage.getErrorMassageFieldEmailOrPassword("Пароль должен содержать a-z, A-Z, 1-9, спецсимвол");
+        registrationPage.buttonRegistrationDisabled();
+        refresh();
+
+        //содержит пробелы
+        $("[id=sign-up-password]").setValue("Qwerty! 1");
+        $("[id=sign-up-passwordConfirm]").click();
+
+        registrationPage.getErrorMassageFieldEmailOrPassword("Пароль не должен содержать пробелов");
+        registrationPage.buttonRegistrationDisabled();
+        refresh();
+
+        //содержит русские символы
+        $("[id=sign-up-password]").setValue("Qwerty!1привет");
+        $("[id=sign-up-passwordConfirm]").click();
+
+        registrationPage.getErrorMassageFieldEmailOrPassword("Пароль должен содержать a-z, A-Z, 1-9, спецсимвол");
+        registrationPage.buttonRegistrationDisabled();
+        refresh();
+
+        //содержит  только русские символы
+        $("[id=sign-up-password]").setValue("Привет!123");
+        $("[id=sign-up-passwordConfirm]").click();
+
+        registrationPage.getErrorMassageFieldEmailOrPassword("Пароль должен содержать a-z, A-Z, 1-9, спецсимвол");
+        registrationPage.buttonRegistrationDisabled();
+        refresh();
+
+        //содержит  только арабские символы
+        $("[id=sign-up-password]").setValue("أنأنسأنأنس");
+        $("[id=sign-up-passwordConfirm]").click();
+
+        registrationPage.getErrorMassageFieldEmailOrPassword("Пароль должен содержать a-z, A-Z, 1-9, спецсимвол");
+        registrationPage.buttonRegistrationDisabled();
+        refresh();
+
+        // Ниже проверим валидность всех доступных символов в два захода
+        User validUser2 = new User("123" + faker.name().firstName(), faker.internet().emailAddress(), "Qw1!#$%&()*+,-./:;<");
+        registrationPage.processRegistration(validUser2.getName(), validUser2.getEmail(), validUser2.getPassword(), validUser2.getPassword());
+        $("[id=sign-up-agreemets]").click();
+        $("[id=sign-up-submit]").click();
+        $(".modal__header")
+                .shouldHave(Condition.text("Email sent"))
+                .shouldBe(visible);
+
+        $(".modal__body")
+                .shouldBe(visible)
+                .shouldHave(Condition.text("Мы отправили ссылку для подтверждения на почту: " + validUser2.getEmail()));
+        refresh();
+
+        User validUser3 = new User("123" + faker.name().firstName(), faker.internet().emailAddress(), "Qw0=>?@[\\]^_{|}~}");
+        registrationPage.processRegistration(validUser3.getName(), validUser3.getEmail(), validUser3.getPassword(), validUser3.getPassword());
+        $("[id=sign-up-agreemets]").click();
+        $("[id=sign-up-submit]").click();
+        $(".modal__header")
+                .shouldHave(Condition.text("Email sent"))
+                .shouldBe(visible);
+
+        $(".modal__body")
+                .shouldBe(visible)
+                .shouldHave(Condition.text("Мы отправили ссылку для подтверждения на почту: " + validUser3.getEmail()));
+    }
+
 }
