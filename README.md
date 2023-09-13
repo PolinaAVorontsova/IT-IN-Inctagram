@@ -7,7 +7,7 @@
 Подключен CI - Appveyor. Ниже бейдж. Если он зеленый то все тесты пройдены. Если красный есть упавшие тесты.
 (Сейчас он красный, т.к. валится тест autoRegistrationAndAuthorization(). Валится т.к. не видит какой то элемент. Но по факту тест проходит. Нужно подробнее изучить логи - [https://vitiaz.atlassian.net/wiki/spaces/V/pages/5734401]()
 # CI
-[![Build status](https://ci.appveyor.com/api/projects/status/q20gws5q56ttccy3?svg=true)](https://ci.appveyor.com/project/Fredyshar/it-in-inctagram)
+[![Build status](https://ci.appveyor.com/api/projects/status/q20gws5q56ttccy3/branch/main?svg=true)](https://ci.appveyor.com/project/Fredyshar/it-in-inctagram/branch/main)
 
 Реализован запуск тестов через Git Actions Pages. Для этого нужно:
 1. Иметь доступ к редактированию
