@@ -53,6 +53,7 @@ public class RegressTest {
     @Story("IN-14 / IN-23")
     @Description("Происходит автоматическая генерация нового email (используется dropEmail), Адрес пользователя сохраняется в файле: src/test/java/brows/data/emailAddressesOfRegisteredUsers.txt")
     void autoRegistrationAndAuthorization() throws IOException {
+        Configuration.headless = true;
         faker = new Faker(new Locale("en"));
         User createUser = new User("", "", "");
         createUser.setName(faker.name().username().replace(".", ""));
