@@ -1,0 +1,11 @@
+image: Ubuntu  # образ для сборки
+
+stack: jdk 11  # версия JDK
+
+branches:
+  only:
+    - main
+
+build_script:
+  - chmod +x gradlew
+  - ./gradlew clean test --info -Dselenide.headless=true
