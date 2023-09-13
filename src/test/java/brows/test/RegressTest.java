@@ -66,9 +66,12 @@ public class RegressTest {
 
         var registrationPage = open(URL_signUpEn, RegistrationPage.class);
 
+//        Clipboard clipboard = clipboard();
+//        createUser.setEmail(clipboard().getText());
+//        createUser.setPassword("Qwe!123");
         Clipboard clipboard = clipboard();
-        createUser.setEmail(clipboard().getText());
-        createUser.setPassword("Qwe!123");
+        clipboard.setText("имитированное значение");
+        createUser.setEmail(clipboard.getText());
 
         FileWriter writer = new FileWriter("src/test/java/brows/data/emailAddressesOfRegisteredUsers.txt", true);
         writer.write("\n");
