@@ -54,11 +54,10 @@ public class LoginPage {
         return new MyProfilePage();
     }
 
-    public void invavalidLoginOrPassword(String login, String password) {
+    public void invalidLoginOrPassword(String login, String password) {
         loginField.setValue(login);
         passwordField.setValue(password);
         buttonLogin.click();
-
     }
 
 }

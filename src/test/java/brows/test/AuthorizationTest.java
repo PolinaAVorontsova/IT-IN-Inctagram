@@ -7,18 +7,17 @@ import org.junit.jupiter.api.*;
 import com.codeborne.selenide.Configuration;
 import brows.data.User;
 
+import static brows.data.User.*;
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AuthorizationTest {
-    User validUser1 = new User("dajoje", "rtnzsfzzc@laste.ml", "Qwe!123");
-    public String wrongLogin = "dajoje8283@wlmycnn.com";
-    public String wrongPass = "Qwe1231!";
+    User validUser1 = new User(lastUserName, lastUserEmail, "Qwe!123");
     public String URL_signInRu = "https://inctagram.vercel.app/ru/sign-in";
 
     @BeforeEach
     public void setUp() {
-        sleep(1000);
+        sleep(500);
         Configuration.holdBrowserOpen = true;
         SelenideLogger.addListener("allure", new AllureSelenide());
     }
@@ -35,6 +34,7 @@ public class AuthorizationTest {
 
     @Test
     void UpdateHappyPath() {
+        var loginPage = open(URL_signInRu, LoginPage.class);
         //Это заглушка теста
     }
 
@@ -43,7 +43,7 @@ public class AuthorizationTest {
     void wrongLogin() {
         var loginPage = open(URL_signInRu, LoginPage.class);
 
-        loginPage.invavalidLoginOrPassword(wrongLogin, validUser1.getPassword());
+        loginPage.invalidLoginOrPassword(wrongLogin, validUser1.getPassword());
         loginPage.getAlertError("Auth error");
     }
 
@@ -51,7 +51,7 @@ public class AuthorizationTest {
     void wrongPass() {
         var loginPage = open(URL_signInRu, LoginPage.class);
 
-        loginPage.invavalidLoginOrPassword(validUser1.getEmail(), wrongPass);
+        loginPage.invalidLoginOrPassword(validUser1.getEmail(), wrongPass);
         loginPage.getErrorMassageFieldEmail("Неверный пароль или почта");
         loginPage.getErrorMassageFieldPassword("Неверный пароль или почта");
     }

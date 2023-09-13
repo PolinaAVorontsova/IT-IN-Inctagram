@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 
 import java.time.Duration;
 
+import static com.codeborne.selenide.Condition.disabled;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 //import static com.codeborne.selenide.Selenide.$$;
@@ -20,9 +21,9 @@ public class RegistrationPage {
     private SelenideElement registrationButton = $("[id=sign-up-submit]");
 
     private SelenideElement backToLoginButton = $("[id=sign-up-link-to-sign-in]");
-
-    private SelenideElement errorMessageUserName = $$("[id=sign-up-userName-error]").first();
-    private SelenideElement errorMessageEmail = $$("[id=sign-up-userName-error]").get(1);
+    private SelenideElement errorMessageUserName = $$("[id=sign-up-userName-error]").first();       // НУЖЕН ОТДЕЛЬНЫЙ ID для поля пароля и емайл
+    private SelenideElement errorMessageEmailOrPassword = $("[id=sign-up-userName-error]");         // НУЖЕН ОТДЕЛЬНЫЙ ID для поля пароля и емайл
+    private SelenideElement errorMessageEmail = $$("[id=sign-up-userName-error]").get(1);           // НУЖЕН ОТДЕЛЬНЫЙ ID для поля пароля и емайл
     private SelenideElement errorMessagePass = $$("[id=sign-up-userName-error]").get(2);
     private SelenideElement errorMessagePassConfirm = $$("[id=sign-up-userName-error]").last();
 
@@ -59,10 +60,21 @@ public class RegistrationPage {
                 .shouldBe(visible);
     }
 
+    public void getErrorMassageFieldEmailOrPassword(String textError) {
+        errorMessageEmailOrPassword
+                .shouldHave(Condition.text(textError))
+                .shouldBe(visible);
+    }
+
     public void getErrorMassageFieldPassConfirm(String textError) {
         errorMessagePassConfirm
                 .shouldHave(Condition.text(textError))
                 .shouldBe(visible);
+    }
+
+    public void buttonRegistrationDisabled() {
+        registrationButton
+                .shouldBe(disabled);
     }
 
     public void processRegistration(String userName, String email, String password, String passwordConfirmation) {
