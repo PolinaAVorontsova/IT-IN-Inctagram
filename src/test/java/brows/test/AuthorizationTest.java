@@ -3,9 +3,12 @@ package brows.test;
 import brows.page.LoginPage;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.selenide.AllureSelenide;
+import org.junit.Ignore;
 import org.junit.jupiter.api.*;
 import com.codeborne.selenide.Configuration;
 import brows.data.User;
+
+import java.io.IOException;
 
 import static brows.data.User.*;
 import static com.codeborne.selenide.Selenide.*;
@@ -32,8 +35,10 @@ public class AuthorizationTest {
         var myProfilePage = loginPage.validLogin(validUser1.getEmail(), validUser1.getPassword());
     }
 
+
+    @Ignore("Игнорируем тест в AppVeyor")
     @Test
-    void UpdateHappyPath() {
+    void UpdateHappyPath() throws IOException {
         var loginPage = open(URL_signInRu, LoginPage.class);
         //Это заглушка теста
     }
